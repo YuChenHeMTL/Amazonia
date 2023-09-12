@@ -1,0 +1,15 @@
+{
+  "name": "Amazonia: Amazon Review Helper",
+  "manifest_version": 3,
+  "version": "1.0",
+  "description": "Creates short analysis of the product's pros and cons based on user reviews",
+  "permissions": ["cookies",
+  "activeTab",
+  "webNavigation",
+  "notifications"
+  ],
+  "host_permissions": ["<all_urls>"],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}

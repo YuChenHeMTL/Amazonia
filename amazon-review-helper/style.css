@@ -1,0 +1,57 @@
+body {
+    font-family: sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0;
+    width: 300px;
+    background-color: #fff;
+    text-align: center;
+}
+
+#header {
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+    color: #333;
+    font-size: 20px;
+    font-weight: 700;
+    padding: 10px 15px;
+    margin-top: 0;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+}
+
+#keywordsubmit {
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    color: #333;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+    margin: auto;
+    padding: 10px 15px;
+}
+
+
+#result-container {
+    text-align: justify;
+    margin: 10 auto;
+    font-size: medium;
+    padding: 10px 15px;
+}
+
+.section-header {
+    font-weight: bold;
+}
+
+#results {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+#goodpoints, #badpoints {
+    white-space: pre-wrap;
+}

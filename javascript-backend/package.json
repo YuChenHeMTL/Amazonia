@@ -1,0 +1,19 @@
+{
+  "name": "first-puppeteer-scraper-example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@faker-js/faker": "^8.0.2",
+    "express": "^4.18.2",
+    "puppeteer": "^21.1.1",
+    "request": "^2.88.2"
+  }
+}
