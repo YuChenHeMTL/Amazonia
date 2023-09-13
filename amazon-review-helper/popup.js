@@ -1,70 +1,92 @@
 var serverhost = 'http://127.0.0.1:3000';
 
-// var backgroundPage = chrome.runtime.webNavigation.onCompleted
-// backgroundPage.openPopup();
-// chrome.webNavigation.onCompleted.addListener(function() {
-//   chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
-//     let currentUrl = tabs[0].url;
-//     alert(currentUrl)
-// })});
+const getQuery = (currentUrl) => {
+  currentUrl = currentUrl.split('/');
+  var query = '';
+  for (var i = 0; i < currentUrl.length; i++) {
+    if (currentUrl[i] == 'dp') {
+      query = currentUrl[i+1].slice(0, 10)
+      break;
+    }
+  }
+  return query;
+}
+
+const setResult = (percentage, fiveStarSummary, oneStarSummary) => {
+  hideWelcome();
+  const resultContainer = document.getElementById('result-container');
+  resultContainer.style.display = 'block';
+  document.getElementById('results').innerHTML = percentage + ' of reviewers would recommend this product';
+  document.getElementById('goodpoints').innerHTML = fiveStarSummary;
+  document.getElementById('badpoints').innerHTML = oneStarSummary;
+}
+
+const hideWelcome = () => {
+  document.getElementById('welcome').style.display = 'none';
+}
 
 window.addEventListener('DOMContentLoaded', function() {
   const button = document.getElementById('keywordsubmit');
+  const resultContainer = document.getElementById('result-container');
+
+  // check if there is data in browser storage
+  chrome.tabs.query({active: true, currentWindow: true}, tabs => {
+    let currentUrl = tabs[0].url;
+    let query = getQuery(currentUrl);
+    chrome.storage.sync.get(null, function(result) {
+      if (result[query] != undefined) {
+        console.log("loaded from storage")
+        const percentage = result[query]['percentage'];
+        const fiveStarSummary = result[query]['fiveStarSummary'];
+        const oneStarSummary = result[query]['oneStarSummary'];
+        setResult(percentage, fiveStarSummary, oneStarSummary);
+      }
+    });
+  });
+
   button.addEventListener('click', function() {
+    hideWelcome();
     // const keyword = document.getElementById('keyword').value;
-    chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
+    chrome.tabs.query({active: true, currentWindow: true}, tabs => {
       // check if current site is Amazon
       let currentUrl = tabs[0].url;
       if (!currentUrl.includes('amazon') || !currentUrl.includes('dp')) {
-        const resultContainer = document.getElementById('result-container');
+        resultContainer.style.display = 'block';
         resultContainer.innerText = 'Please go to an Amazon product page to use this extension';
         resultContainer.style.fontWeight = 'bold';
-        button.disabled = true;
         return;
       }
-      currentUrl = currentUrl.split('/');
-      let query = '';
-      for (var i = 0; i < currentUrl.length; i++) {
-        if (/^[A-Za-z0-9]*$/.test(currentUrl[i]) && currentUrl[i].length == 10) {
-          query = currentUrl[i];
-        }
+      document.getElementById('loading-text').style.display = 'block';
+      var query = getQuery(currentUrl);
+      if (query == '') {
+        resultContainer.style.display = 'block';
+        resultContainer.innerText = 'A parsing error occurred. Please try again.';
+        resultContainer.style.fontWeight = 'bold';
+        return;
       }
-
       var url = serverhost + '/scrape?asin=' + query;
-      const results = fetch(url)
+      fetch(url)
       .then(response => response.json())
       .then(response => {
+        document.getElementById('loading-text').style.display = 'none';
         console.log(response)
         const percentage = response['percentage'];
         const fiveStarSummary = response['fiveStarSummary'];
         const oneStarSummary = response['oneStarSummary'];
-        document.getElementById('results').innerHTML = percentage + ' of reviewers would recommend this product';
-        document.getElementById('result-container').style.visibility = 'visible';
-        document.getElementById('goodpoints').innerHTML = fiveStarSummary;
-        document.getElementById('badpoints').innerHTML = oneStarSummary;
+        setResult(percentage, fiveStarSummary, oneStarSummary);
+
+        // save to browser storage
+        var data = {};
+        data[query] = {
+          'percentage': percentage,
+          'fiveStarSummary': fiveStarSummary,
+          'oneStarSummary': oneStarSummary
+        };
+        chrome.storage.sync.set(data);
       })
       .catch(error => console.log(error))
       
     });
   });
-})
+});
 
-
-
-// chrome.runtime.onMessage.addListener(
-//   function(request, sender, sendResponse) {
-    
-      
-//     var url = serverhost + '/scrape?asin=' + request.topic;
-    
-//     console.log(url);
-    
-//     //var url = "http://127.0.0.1:8000/wiki/get_wiki_summary/?topic=%22COVID19%22"	
-//     fetch(url)
-//     .then(response => response.json())
-//     .then(response => sendResponse({text: response}))
-//     .catch(error => console.log(error))
-      
-//     return true;  // Will respond asynchronously.
-    
-// });

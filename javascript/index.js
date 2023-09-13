@@ -239,9 +239,7 @@ app.get('/scrape', async (req, res) => {
   // await browser.close();
   console.log(asin)
   const reviews = await getQuotes(asin);
-  console.log(reviews)
   const predictions = await getPredictions(reviews[0]);
-  console.log(predictions)
   const fiveStarSummary = await getSummary(reviews[1]);
   const oneStarSummary = await getSummary(reviews[2]);
   // const summary = ""
@@ -458,7 +456,6 @@ const getQuotes = async (asin) => {
 
 const getPredictions = async (reviews) => {
   const backEndUrl = "http://127.0.0.1:5000/evaluate";
-  // console.log(reviews)
   const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -479,7 +476,6 @@ const getPredictions = async (reviews) => {
 
 const getSummary = async (reviews) => {
   const backEndUrl = "http://127.0.0.1:5000/summary";
-  console.log(reviews)
   const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -488,7 +484,6 @@ const getSummary = async (reviews) => {
   return await fetch(backEndUrl, requestOptions)
     .then((response) => response.json())  
     .then((data) => {
-      console.log(data)
       return data;
     }).catch((error) => console.log(error));
 }

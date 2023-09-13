@@ -9,13 +9,21 @@
     </head>
     <body>
         <h1 id="header">Product Review Analysis</h1>
+        
         <button id="keywordsubmit">Analyze</button>
-        <div id="result-container">
-            <div id="results">something here</div>
-            <div class="section-header">Pros</div>
-            <div id="goodpoints">123 
-                123
+        <div id="loading-text" style="display: none;">Loading ...</div>
+        <div id="welcome">
+            <div id="welcome-text">
+                Welcome to Amazonia !
             </div>
+            <div id="welcome-desc">
+                Please navigate to a product page on Amazon.com and click the "Analyze" button to get started.
+            </div>
+        </div>
+        <div id="result-container" style="display: none;">
+            <div id="results"></div>
+            <div class="section-header">Pros</div>
+            <div id="goodpoints"></div>
             <div class="section-header">Cons</div>
             <div id="badpoints">123</div>
         </div>
