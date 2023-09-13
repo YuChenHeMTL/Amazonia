@@ -1,6 +1,10 @@
 import openai
+from dotenv import load_dotenv
+import os
 
-openai.api_key = "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"
+load_dotenv()
+
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 def getSummary(reviews):
     # gets a bunch of reviews
