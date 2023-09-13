@@ -15,8 +15,11 @@ window.addEventListener('DOMContentLoaded', function() {
     chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
       // check if current site is Amazon
       let currentUrl = tabs[0].url;
-      if (!currentUrl.includes('amazon')) {
-        alert('Please go to an Amazon product page');
+      if (!currentUrl.includes('amazon') || !currentUrl.includes('dp')) {
+        const resultContainer = document.getElementById('result-container');
+        resultContainer.innerText = 'Please go to an Amazon product page to use this extension';
+        resultContainer.style.fontWeight = 'bold';
+        button.disabled = true;
         return;
       }
       currentUrl = currentUrl.split('/');

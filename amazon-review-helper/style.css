@@ -36,7 +36,7 @@ body {
 
 
 #result-container {
-    text-align: justify;
+    text-align: left;
     margin: 10 auto;
     font-size: medium;
     padding: 10px 15px;

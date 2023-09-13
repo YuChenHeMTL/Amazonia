@@ -10,6 +10,13 @@
   ],
   "host_permissions": ["<all_urls>"],
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_icon": "amazon.png"
+  },
+  "icons": {
+    "16": "amazon.png",
+    "32": "amazon.png",
+    "48": "amazon.png",
+    "128": "amazon.png"
   }
 }
