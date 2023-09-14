@@ -117,3 +117,9 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+
+# Machine Learning Data
+*.zip
+*.bz2
+*.gz
+*.bin

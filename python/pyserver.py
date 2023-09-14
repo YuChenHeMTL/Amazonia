@@ -23,8 +23,9 @@ def index():
 @app.route('/summary', methods=['POST'])
 def summary():
     data = request.get_json()
+    isPositive = request.args.get('isPositive')
     # print(data)
-    result = getSummary(data)
+    result = getSummary(data, isPositive)
     return json.dumps(result)
    
 if __name__ == "__main__": 

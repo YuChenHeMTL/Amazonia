@@ -474,8 +474,8 @@ const getPredictions = async (reviews) => {
   ).catch((error) => console.log(error));
 }
 
-const getSummary = async (reviews) => {
-  const backEndUrl = "http://127.0.0.1:5000/summary";
+const getSummary = async (reviews, isPositive) => {
+  const backEndUrl = "http://127.0.0.1:5000/summary" + (isPositive ? "?isPositive=true" : "");
   const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
