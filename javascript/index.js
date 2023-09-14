@@ -237,11 +237,15 @@ app.get('/scrape', async (req, res) => {
   // await page.goto(url);
   // const title = await page.title();
   // await browser.close();
-  console.log(asin)
+  console.log("started task for " + asin)
   const reviews = await getQuotes(asin);
+  console.log("finished scraping for " + asin)
   const predictions = await getPredictions(reviews[0]);
-  const fiveStarSummary = await getSummary(reviews[1]);
-  const oneStarSummary = await getSummary(reviews[2]);
+  console.log("finished predictions for " + asin)
+  const fiveStarSummary = await getSummary(reviews[1], true);
+  const oneStarSummary = await getSummary(reviews[2], false);
+  console.log("finished summary for " + asin)
+  console.log("completed task for " + asin)
   // const summary = ""
   res.send(JSON.stringify({
     percentage: predictions + '%', 
@@ -363,10 +367,14 @@ const getQuotes = async (asin) => {
 
   // Open a new page
   const page = await browser.newPage();
-  const client = await page.target().createCDPSession();
-  const setCookie = await client.send ('Network.setCookie', { 
-    name: 'amznfbgid', value: 'X05-9930568-3308693:1621105564', domain: 'https://amazon.ca' 
-  });
+//   const client = await page.target().createCDPSession();
+  for (let i = 0; i < cookies.length; i++) {
+    cookies[i]['domain'] = "https://amazon.ca";
+    await page.setCookie(cookies[i]);
+  }
+//   const setCookie = await client.send ('Network.setCookie', { 
+//     name: 'amznfbgid', value: 'X05-9930568-3308693:1621105564', domain: 'https://amazon.ca' 
+//   });
 
   const allReviews = [];
   const allReviewsFilter = {name: "all_reviews", value: ""};
@@ -392,7 +400,7 @@ const getQuotes = async (asin) => {
 
     const link = `https://www.amazon.ca/product-reviews/${asin}/reviewerType=all_reviews&${filter}pageNumber=${counter}`;
 
-    while (!lastPageReached && allReviews.length < 100 && signinCounter < 3 && counter <= totalCounter) {
+    while (!lastPageReached && signinCounter < 3 && counter <= totalCounter) {
       // get next page
       await page.goto(link, {
         waitUntil: "domcontentloaded",
@@ -414,7 +422,7 @@ const getQuotes = async (asin) => {
             const reviewTitle = review.querySelector(".review-title");
             const reviewData = review.querySelector(".review-text-content");
             const stars = review.querySelector(".a-icon-alt");
-            const nextPageUrl = review.querySelector(".a-last a");
+        //     const nextPageUrl = review.querySelector(".a-last a");
             return {
               title: (reviewTitle) ? reviewTitle.innerText : null,
               stars: (stars) ? stars.innerText : null,
@@ -435,15 +443,14 @@ const getQuotes = async (asin) => {
           review.text = review.text.replace(/(\r\n|\n|\r)/gm, "");
 
           reviews.push(review);
-        } else if (review.nextPageUrl) {
-          // next page
-          // nextPage = review.nextPageUrl;
-        }
+        } 
       });
       // await page.close();
       // await page.waitForTimeout(3000);
       console.log(reviews.length);
-      counter += 1;
+      if (reviews.length > 0) {
+        counter += 1;
+      }
       console.log(counter);
       // nextPage = amazonLink + counter;
     }

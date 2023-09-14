@@ -24,6 +24,7 @@ def index():
 def summary():
     data = request.get_json()
     isPositive = request.args.get('isPositive')
+    # print('isPositive', isPositive)
     # print(data)
     result = getSummary(data, isPositive)
     return json.dumps(result)
