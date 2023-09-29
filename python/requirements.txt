@@ -14,7 +14,7 @@ debugpy
 decorator
 exceptiongroup
 executing
-fasttext-wheel
+fasttext==0.6.0
 filelock
 Flask
 frozenlist
