@@ -62,7 +62,6 @@ six
 stack-data
 sympy
 threadpoolctl
-tokenizers
 torch
 tornado
 tqdm
